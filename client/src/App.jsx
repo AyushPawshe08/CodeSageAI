@@ -1,12 +1,11 @@
-import { useState } from 'react'
 import CodeReviewer from './components/CodeReviewer'
-
+import { ThemeProvider } from './context/ThemeContext'
 
 function App() {
   return (
-    <div className="min-h-screen bg-white">
+    <ThemeProvider>
       <CodeReviewer />
-    </div>
+    </ThemeProvider>
   )
 }
 

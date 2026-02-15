@@ -1,30 +1,267 @@
 @import "tailwindcss";
 
-/* Custom scrollbar - minimal black and white */
+/* ═══════════════════════════════════════════
+   CODESAGE AI — DESIGN SYSTEM
+   ═══════════════════════════════════════════ */
+
+/* ── Light Theme (Default) ── */
+:root {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+
+  --bg-base: #fafbff;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f4f6fb;
+  --bg-inset: #eef1f8;
+  --bg-overlay: rgba(255, 255, 255, 0.85);
+
+  --text-heading: #0c0e16;
+  --text-body: #3a3f52;
+  --text-muted: #8b90a3;
+  --text-faint: #b5b9cc;
+
+  --border-default: #e4e7f0;
+  --border-subtle: #eff1f7;
+  --border-focus: #7c5cfc;
+
+  --accent: #7c5cfc;
+  --accent-hover: #6b4ae8;
+  --accent-light: #ede8ff;
+  --accent-glow: rgba(124, 92, 252, 0.12);
+  --accent-gradient: #7c5cfc;
+
+  --success: #22c55e;
+  --success-bg: #ecfdf5;
+  --error: #ef4444;
+  --error-bg: #fef2f2;
+  --error-border: #fecaca;
+
+  --shadow-xs: 0 1px 2px rgba(12, 14, 22, 0.04);
+  --shadow-sm: 0 2px 8px rgba(12, 14, 22, 0.05);
+  --shadow-md: 0 4px 20px rgba(12, 14, 22, 0.07);
+  --shadow-lg: 0 8px 40px rgba(12, 14, 22, 0.09);
+  --shadow-accent: 0 4px 24px rgba(124, 92, 252, 0.2);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --editor-bg: #ffffff;
+  --editor-gutter: #fafbff;
+}
+
+/* ── Dark Theme ── */
+.dark {
+  --bg-base: #0a0b10;
+  --bg-surface: #12131a;
+  --bg-elevated: #1a1b25;
+  --bg-inset: #0e0f16;
+  --bg-overlay: rgba(18, 19, 26, 0.9);
+
+  --text-heading: #f0f1f7;
+  --text-body: #b0b3c6;
+  --text-muted: #6b6f85;
+  --text-faint: #44475a;
+
+  --border-default: #25273a;
+  --border-subtle: #1c1e2e;
+  --border-focus: #9175ff;
+
+  --accent: #9175ff;
+  --accent-hover: #a18aff;
+  --accent-light: rgba(145, 117, 255, 0.12);
+  --accent-glow: rgba(145, 117, 255, 0.15);
+  --accent-gradient: #9175ff;
+
+  --success: #34d399;
+  --success-bg: rgba(52, 211, 153, 0.1);
+  --error: #f87171;
+  --error-bg: rgba(248, 113, 113, 0.08);
+  --error-border: rgba(248, 113, 113, 0.2);
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.6);
+  --shadow-accent: 0 4px 30px rgba(145, 117, 255, 0.25);
+
+  --editor-bg: #12131a;
+  --editor-gutter: #0e0f16;
+}
+
+/* ── Global Reset ── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-base);
+  color: var(--text-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.35s ease, color 0.35s ease;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ── */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f5f5f5;
-  border: 1px solid #000;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #000;
-  border: 2px solid #fff;
+  background: var(--text-faint);
+  border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #333;
+  background: var(--text-muted);
 }
 
-/* Monaco Editor styling */
+/* ── Selection ── */
+::selection {
+  background: rgba(124, 92, 252, 0.2);
+  color: var(--text-heading);
+}
+
+/* ── Monaco Overrides ── */
 .monaco-editor {
-  border-radius: 0;
+  border-radius: 0 !important;
 }
 
 .monaco-editor .margin {
-  background-color: #fafafa !important;
+  background-color: var(--editor-gutter) !important;
+}
+
+/* ══════════════════════════
+   KEYFRAME ANIMATIONS
+   ══════════════════════════ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dotPulse {
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.anim-fadeInUp {
+  animation: fadeInUp 0.5s var(--ease-out) both;
+}
+
+.anim-fadeIn {
+  animation: fadeIn 0.4s ease both;
+}
+
+.anim-scaleIn {
+  animation: scaleIn 0.35s var(--ease-spring) both;
+}
+
+.anim-float {
+  animation: float 3.5s ease-in-out infinite;
 }
