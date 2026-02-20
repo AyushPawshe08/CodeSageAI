@@ -1,0 +1,30 @@
+# ============================================
+# Files/folders to EXCLUDE from the Docker image
+# This keeps the image small and secure
+# ============================================
+
+# Virtual environment (dependencies are installed fresh via requirements.txt)
+venv/
+env/
+ENV/
+
+# Environment file (secrets should NOT be baked into the image)
+.env
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# IDE files
+.vscode/
+.idea/
+
+# Git
+.git
+.gitignore
+
+# OS files
+.DS_Store
+Thumbs.db

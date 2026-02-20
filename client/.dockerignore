@@ -1,0 +1,25 @@
+# ============================================
+# Files/folders to EXCLUDE from the Docker image
+# ============================================
+
+# Dependencies (will be installed fresh via npm ci)
+node_modules/
+
+# Build output (will be built fresh inside the container)
+dist/
+
+# IDE files
+.vscode/
+.idea/
+
+# Git
+.git
+.gitignore
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,4 +1,6 @@
-const API_BASE_URL = 'http://127.0.0.1:8000/api'
+// In Docker: nginx proxies /api/* to the backend, so we use a relative URL
+// In local dev: falls back to the direct backend URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
 
 /**
  * Review code using the AI backend

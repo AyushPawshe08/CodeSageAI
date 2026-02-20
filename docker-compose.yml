@@ -1,0 +1,15 @@
+# ============================================
+# 🐳 Docker Compose — Single Container Setup
+# ============================================
+
+services:
+  codesage-ai:
+    build:
+      context: .                 # Build from the root directory
+      dockerfile: Dockerfile     # Uses the root Dockerfile
+    ports:
+      - "80:80"                  # Frontend (Nginx)
+      - "8000:8000"              # Backend API (Uvicorn)
+    env_file:
+      - ./server/.env            # Load API keys from .env
+    restart: unless-stopped
