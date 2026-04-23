@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     OTP_EXPIRE_MINUTES: int = 10
     FRONTEND_ORIGINS: str = Field(
-        default="http://localhost:5173,http://localhost:3000,http://localhost,https://code-sage-ai-two.vercel.app"
+        default="http://localhost:3000,http://localhost:5173,https://code-sage-ai-two.vercel.app"
     )
 
     EMAIL_HOST: str = Field(
