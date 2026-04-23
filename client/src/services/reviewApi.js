@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'https://codesageai-6uab.onrender.com/api',
+    baseURL: import.meta.env.VITE_API_URL || 'https://codesageai-2.onrender.com/api',
 })
 
 const authHeaders = () => {
