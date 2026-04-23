@@ -1,0 +1,15 @@
+.git
+.gitignore
+client/node_modules/
+client/dist/
+server/venv/
+server/env/
+.vscode/
+.idea/
+server/.env
+**/__pycache__/
+**/*.py[cod]
+.DS_Store
+Thumbs.db
+*.log
+docker-compose.yml

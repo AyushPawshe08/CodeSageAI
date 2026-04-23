@@ -1,5 +1,13 @@
 fastapi
-uvicorn[standard]
+uvicorn
 python-dotenv
 pydantic
-requests
+sqlalchemy
+psycopg2-binary
+PyJWT
+pwdlib[argon2]
+pydantic-settings
+pydantic[email]
+resend
+python-multipart
+tiktoken
