@@ -1,34 +1,15 @@
-# ============================================
-# Root .dockerignore
-# ============================================
-
-# Git
-.git
-.gitignore
-
-# Node modules & Python venv (reinstalled inside container)
-client/node_modules/
-client/dist/
-server/venv/
-server/env/
-
-# IDE files
-.vscode/
-.idea/
-
-# Environment file with secrets
-server/.env
-
-# Python cache
-**/__pycache__/
-**/*.py[cod]
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-
-# Docker files (not needed inside the image)
+.git
+.gitignore
+client/node_modules/
+client/dist/
+server/venv/
+server/env/
+.vscode/
+.idea/
+server/.env
+**/__pycache__/
+**/*.py[cod]
+.DS_Store
+Thumbs.db
+*.log
 docker-compose.yml
