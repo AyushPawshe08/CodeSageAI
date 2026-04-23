@@ -23,7 +23,7 @@ class Settings(BaseSettings):
         default="http://localhost:5173,http://localhost:3000,http://localhost,https://code-sage-ai-two.vercel.app"
     )
 
-    SMTP_HOST: str = Field(default="", validation_alias=AliasChoices("SMTP_HOST", "SMTP_SERVER"))
+    SMTP_HOST: str = Field(default="", validation_alias=AliasChoices("SMTP_HOST", "SMTP_SERVER", "SMTP"))
     SMTP_PORT: int = 587
     SMTP_USERNAME: str = Field(default="", validation_alias=AliasChoices("SMTP_USERNAME", "SMTP_USER"))
     SMTP_PASSWORD: str = Field(default="", validation_alias=AliasChoices("SMTP_PASSWORD", "SMTP_PASS"))
