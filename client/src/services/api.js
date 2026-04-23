@@ -1,6 +1,15 @@
 // In Docker: nginx proxies /api/* to the backend, so we use a relative URL
 // In local dev: falls back to the direct backend URL
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
+
+export const buildJsonHeaders = () => ({
+    'Content-Type': 'application/json',
+})
+
+export const buildAuthHeaders = () => {
+    const token = localStorage.getItem('codesage-token')
+    return token ? { Authorization: `Bearer ${token}` } : {}
+}
 
 /**
  * Review code using the AI backend
@@ -13,7 +22,7 @@ export const reviewCode = async (code, language) => {
         const response = await fetch(`${API_BASE_URL}/review`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                ...buildJsonHeaders(),
             },
             body: JSON.stringify({ code, language }),
         })
@@ -43,7 +52,7 @@ export const refactorCode = async (code, language) => {
         const response = await fetch(`${API_BASE_URL}/refactor`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                ...buildJsonHeaders(),
             },
             body: JSON.stringify({ code, language }),
         })
