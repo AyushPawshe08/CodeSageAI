@@ -34,34 +34,39 @@ def _build_otp_text(otp: str) -> str:
     )
 
 
-def _validate_smtp_config() -> None:
+def _validate_email_config() -> None:
     missing = []
 
-    if not settings.SMTP_HOST:
-        missing.append("SMTP_HOST")
-    if not settings.SMTP_USERNAME:
-        missing.append("SMTP_USERNAME")
-    if not settings.SMTP_PASSWORD:
-        missing.append("SMTP_PASSWORD")
-    if not settings.SMTP_FROM_EMAIL:
-        missing.append("SMTP_FROM_EMAIL")
+    if not settings.EMAIL_HOST:
+        missing.append("EMAIL_HOST")
+    if not settings.EMAIL_USER:
+        missing.append("EMAIL_USER")
+    if not settings.EMAIL_PASSWORD:
+        missing.append("EMAIL_PASSWORD")
+    if not settings.EMAIL_FROM:
+        missing.append("EMAIL_FROM")
 
     if missing:
-        raise ValueError(f"Missing SMTP environment variables: {', '.join(missing)}")
+        raise ValueError(f"Missing email environment variables: {', '.join(missing)}")
 
 
-def send_otp_email(email: str, otp: str) -> None:
-    _validate_smtp_config()
+def send_otp_email(to_email: str, otp: str) -> None:
+    _validate_email_config()
 
     message = EmailMessage()
     message["Subject"] = "Your CodeSage AI verification code"
-    message["From"] = settings.SMTP_FROM_EMAIL
-    message["To"] = email
+    message["From"] = settings.EMAIL_FROM
+    message["To"] = to_email
     message.set_content(_build_otp_text(otp))
     message.add_alternative(_build_otp_html(otp), subtype="html")
 
-    with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=30) as smtp:
-        if settings.SMTP_USE_TLS:
-            smtp.starttls()
-        smtp.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
-        smtp.send_message(message)
+    try:
+        with smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT, timeout=30) as smtp:
+            if settings.EMAIL_USE_TLS:
+                smtp.starttls()
+            smtp.login(settings.EMAIL_USER, settings.EMAIL_PASSWORD)
+            smtp.send_message(message)
+        print(f"OTP email sent successfully to {to_email}")
+    except Exception as exc:
+        print(f"Failed to send OTP email to {to_email}: {exc}")
+        raise

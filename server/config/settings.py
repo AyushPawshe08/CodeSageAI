@@ -23,12 +23,15 @@ class Settings(BaseSettings):
         default="http://localhost:5173,http://localhost:3000,http://localhost,https://code-sage-ai-two.vercel.app"
     )
 
-    SMTP_HOST: str = Field(default="", validation_alias=AliasChoices("SMTP_HOST", "SMTP_SERVER", "SMTP"))
-    SMTP_PORT: int = 587
-    SMTP_USERNAME: str = Field(default="", validation_alias=AliasChoices("SMTP_USERNAME", "SMTP_USER"))
-    SMTP_PASSWORD: str = Field(default="", validation_alias=AliasChoices("SMTP_PASSWORD", "SMTP_PASS"))
-    SMTP_FROM_EMAIL: str = Field(default="", validation_alias=AliasChoices("SMTP_FROM_EMAIL", "SMTP_FROM"))
-    SMTP_USE_TLS: bool = Field(default=True, validation_alias=AliasChoices("SMTP_USE_TLS", "SMTP_TLS"))
+    EMAIL_HOST: str = Field(
+        default="",
+        validation_alias=AliasChoices("EMAIL_HOST", "SMTP_HOST", "SMTP_SERVER", "SMTP"),
+    )
+    EMAIL_PORT: int = Field(default=587, validation_alias=AliasChoices("EMAIL_PORT", "SMTP_PORT"))
+    EMAIL_USER: str = Field(default="", validation_alias=AliasChoices("EMAIL_USER", "SMTP_USERNAME", "SMTP_USER"))
+    EMAIL_PASSWORD: str = Field(default="", validation_alias=AliasChoices("EMAIL_PASSWORD", "SMTP_PASSWORD", "SMTP_PASS"))
+    EMAIL_FROM: str = Field(default="", validation_alias=AliasChoices("EMAIL_FROM", "SMTP_FROM_EMAIL", "SMTP_FROM"))
+    EMAIL_USE_TLS: bool = Field(default=True, validation_alias=AliasChoices("EMAIL_USE_TLS", "SMTP_USE_TLS", "SMTP_TLS"))
 
     @property
     def cors_origins(self) -> list[str]:
@@ -45,10 +48,10 @@ class Settings(BaseSettings):
         "SECRET_KEY",
         "ALGORITHM",
         "FRONTEND_ORIGINS",
-        "SMTP_HOST",
-        "SMTP_USERNAME",
-        "SMTP_PASSWORD",
-        "SMTP_FROM_EMAIL",
+        "EMAIL_HOST",
+        "EMAIL_USER",
+        "EMAIL_PASSWORD",
+        "EMAIL_FROM",
         mode="before",
     )
     @classmethod
