@@ -1,6 +1,13 @@
-import resend
+import smtplib
+from email.message import EmailMessage
 
-from config.settings import settings
+try:
+
+    from config.settings import settings
+
+except ModuleNotFoundError:
+
+    from server.config.settings import settings
 
 
 def _build_otp_html(otp: str) -> str:
@@ -25,27 +32,47 @@ def _build_otp_html(otp: str) -> str:
     """
 
 
-def send_otp_email(email: str, otp: str) -> None:
-    if not settings.RESEND_API_KEY:
-        raise ValueError("RESEND_API_KEY is missing from the environment")
+def _build_otp_text(otp: str) -> str:
+    return (
+        "CodeSage AI verification code\n\n"
+        f"Your one-time code is: {otp}\n\n"
+        "This code expires in a few minutes."
+    )
 
-    resend.api_key = settings.RESEND_API_KEY
 
-    from_email = (settings.RESEND_FROM_EMAIL or settings.AUTH_FROM_EMAIL).strip()
-    test_sender = "onboarding@resend.dev"
+def _validate_email_config() -> None:
+    missing = []
 
-    if from_email == test_sender and email.lower() != from_email.lower():
-        raise ValueError(
-            "Resend test sender can only email its own verified test address. "
-            "Set RESEND_FROM_EMAIL to a verified domain sender at resend.com/domains."
-        )
+    if not settings.EMAIL_HOST:
+        missing.append("EMAIL_HOST")
+    if not settings.EMAIL_USER:
+        missing.append("EMAIL_USER")
+    if not settings.EMAIL_PASSWORD:
+        missing.append("EMAIL_PASSWORD")
+    if not settings.EMAIL_FROM:
+        missing.append("EMAIL_FROM")
 
-    params = {
-        "from": from_email,
-        "to": [email],
-        "subject": "Your CodeSage AI verification code",
-        "html": _build_otp_html(otp),
-        "text": f"Your CodeSage AI verification code is {otp}. It expires in a few minutes.",
-    }
+    if missing:
+        raise ValueError(f"Missing email environment variables: {', '.join(missing)}")
 
-    resend.Emails.send(params)
+
+def send_otp_email(to_email: str, otp: str) -> None:
+    _validate_email_config()
+
+    message = EmailMessage()
+    message["Subject"] = "Your CodeSage AI verification code"
+    message["From"] = settings.EMAIL_FROM
+    message["To"] = to_email
+    message.set_content(_build_otp_text(otp))
+    message.add_alternative(_build_otp_html(otp), subtype="html")
+
+    try:
+        with smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT, timeout=30) as smtp:
+            if settings.EMAIL_USE_TLS:
+                smtp.starttls()
+            smtp.login(settings.EMAIL_USER, settings.EMAIL_PASSWORD)
+            smtp.send_message(message)
+        print(f"OTP email sent successfully to {to_email}")
+    except Exception as exc:
+        print(f"Failed to send OTP email to {to_email}: {exc}")
+        raise
