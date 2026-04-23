@@ -1,7 +1,13 @@
 import smtplib
 from email.message import EmailMessage
 
-from config.settings import settings
+try:
+
+    from config.settings import settings
+
+except ModuleNotFoundError:
+
+    from server.config.settings import settings
 
 
 def _build_otp_html(otp: str) -> str:
