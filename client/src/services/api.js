@@ -1,6 +1,6 @@
-// In Docker: nginx proxies /api/* to the backend, so we use a relative URL
-// In local dev: falls back to the direct backend URL
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
+// Production defaults to the deployed backend so the Vercel frontend works out of the box.
+// You can still override this with VITE_API_URL in local development or future deployments.
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://codesageai-6uab.onrender.com/api'
 
 export const buildJsonHeaders = () => ({
     'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export const reviewCode = async (code, language) => {
         return await response.json()
     } catch (error) {
         if (error.message.includes('Failed to fetch')) {
-            throw new Error('Cannot connect to server. Make sure the backend is running on http://127.0.0.1:8000')
+            throw new Error('Cannot connect to server. Make sure the backend is reachable at https://codesageai-6uab.onrender.com')
         }
         throw error
     }
@@ -65,7 +65,7 @@ export const refactorCode = async (code, language) => {
         return await response.json()
     } catch (error) {
         if (error.message.includes('Failed to fetch')) {
-            throw new Error('Cannot connect to server. Make sure the backend is running on http://127.0.0.1:8000')
+            throw new Error('Cannot connect to server. Make sure the backend is reachable at https://codesageai-6uab.onrender.com')
         }
         throw error
     }

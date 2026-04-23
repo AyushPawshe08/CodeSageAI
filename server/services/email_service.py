@@ -1,4 +1,5 @@
-import resend
+import smtplib
+from email.message import EmailMessage
 
 from config.settings import settings
 
@@ -25,27 +26,42 @@ def _build_otp_html(otp: str) -> str:
     """
 
 
+def _build_otp_text(otp: str) -> str:
+    return (
+        "CodeSage AI verification code\n\n"
+        f"Your one-time code is: {otp}\n\n"
+        "This code expires in a few minutes."
+    )
+
+
+def _validate_smtp_config() -> None:
+    missing = []
+
+    if not settings.SMTP_HOST:
+        missing.append("SMTP_HOST")
+    if not settings.SMTP_USERNAME:
+        missing.append("SMTP_USERNAME")
+    if not settings.SMTP_PASSWORD:
+        missing.append("SMTP_PASSWORD")
+    if not settings.SMTP_FROM_EMAIL:
+        missing.append("SMTP_FROM_EMAIL")
+
+    if missing:
+        raise ValueError(f"Missing SMTP environment variables: {', '.join(missing)}")
+
+
 def send_otp_email(email: str, otp: str) -> None:
-    if not settings.RESEND_API_KEY:
-        raise ValueError("RESEND_API_KEY is missing from the environment")
+    _validate_smtp_config()
 
-    resend.api_key = settings.RESEND_API_KEY
+    message = EmailMessage()
+    message["Subject"] = "Your CodeSage AI verification code"
+    message["From"] = settings.SMTP_FROM_EMAIL
+    message["To"] = email
+    message.set_content(_build_otp_text(otp))
+    message.add_alternative(_build_otp_html(otp), subtype="html")
 
-    from_email = (settings.RESEND_FROM_EMAIL or settings.AUTH_FROM_EMAIL).strip()
-    test_sender = "onboarding@resend.dev"
-
-    if from_email == test_sender and email.lower() != from_email.lower():
-        raise ValueError(
-            "Resend test sender can only email its own verified test address. "
-            "Set RESEND_FROM_EMAIL to a verified domain sender at resend.com/domains."
-        )
-
-    params = {
-        "from": from_email,
-        "to": [email],
-        "subject": "Your CodeSage AI verification code",
-        "html": _build_otp_html(otp),
-        "text": f"Your CodeSage AI verification code is {otp}. It expires in a few minutes.",
-    }
-
-    resend.Emails.send(params)
+    with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=30) as smtp:
+        if settings.SMTP_USE_TLS:
+            smtp.starttls()
+        smtp.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
+        smtp.send_message(message)
