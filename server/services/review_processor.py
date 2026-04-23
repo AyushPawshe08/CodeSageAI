@@ -92,7 +92,7 @@ def combine_sources(sources: Iterable[UploadedSource]) -> tuple[str, str, int]:
             primary_filename = source.filename
         total_size += source.file_size
         cleaned = clean_code_text(source.content)
-        combined_parts.append(f"#
+        combined_parts.append(f"# ==== {source.filename} ====\n{cleaned}")
     return "\n\n".join(combined_parts).strip(), primary_filename, total_size
 def get_tokenizer():
     if tiktoken is None:
@@ -120,7 +120,7 @@ def _strip_markers(text: str) -> str:
     cleaned_lines: list[str] = []
     for line in text.splitlines():
         line = re.sub(r"^\s*[-*•]+\s*", "", line)
-        line = re.sub(r"^\s*
+        line = re.sub(r"^\s*#+\s*", "", line)
         cleaned_lines.append(line.rstrip())
     return "\n".join(cleaned_lines).strip()
 def build_review_prompt(code: str, language: str, chunk_index: int | None = None, total_chunks: int | None = None) -> str:
